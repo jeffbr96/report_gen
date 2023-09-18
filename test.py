@@ -7,23 +7,28 @@ import os
 from os import listdir
 from PIL import Image
 import datetime
+import glob
 
 def createDoc(inpTitle, inpFile):
     list = []
 
     # get the path or directory
     folder_dir = os.getcwd()
-    directory = 'Pics'
-    path = os.path.join(folder_dir, directory)
-    if os.path.exists(path) == False:
-        os.makedirs(path)
+    directory_pics = 'Pics'
+    directory_reports = 'Reports'
+    path_pics = os.path.join(folder_dir, directory_pics)
+    path_reports = os.path.join(folder_dir, directory_reports)
+    if os.path.exists(path_pics) == False:
+        os.makedirs(path_pics)
+    if os.path.exists(path_reports) == False:
+        os.makedirs(path_reports)
     
     for images in os.listdir(folder_dir):
         # check if the image ends with png or jpg or jpeg
         if (images.endswith(".png") or images.endswith(".jpg") or images.endswith(".jpeg")):
             # display
             img = Image.open(images)
-            img.save(os.path.join(path, images))
+            img.save(os.path.join(path_pics, images))
             print(images)
             list.append(images)
             #img.close()
@@ -67,7 +72,17 @@ def createDoc(inpTitle, inpFile):
     else: file_name = str(now) + "report." + "docx"
     print(file_name)
     print(now)
+    print(path_reports + file_name)
+    pattern = "*.docx"
+    files = glob.glob(pattern)
+    print(files)
+    for file in files:
+        os.remove(file)
+        print(file)
     doc.save(file_name)
+    print(path_reports)
+    #os.open(path_reports, os.O_RDWR|os.O_CREAT)
+    doc.save(os.path.join(path_reports, file_name))
 
 
 
@@ -99,7 +114,7 @@ def createWindow():
         btn2.pack_forget()
         l1.pack_forget()
         no.pack()
-        createDoc('')
+        createDoc(inpTitle, inpFile)
         
     # Creating tkinter window with fixed geometry
     root = Tk()
